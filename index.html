@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Photo Crop & Resize</title>
+<style>
+*{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#f5f5f7;color:#111}
+main{max-width:520px;margin:auto;padding:28px 20px 40px}h1{text-align:center;font-size:28px;margin:8px 0 6px}.sub{text-align:center;color:#666;margin:0 0 25px}
+.card{background:#fff;border-radius:18px;padding:20px;margin:14px 0;box-shadow:0 2px 10px #0000000d}
+label{display:block;font-weight:600;margin:12px 0 6px}
+input[type=number]{width:100%;font-size:18px;padding:12px;border:1px solid #ccc;border-radius:12px}
+input[type=file]{width:100%;padding:10px 0}
+button{width:100%;border:0;border-radius:14px;padding:14px;font-size:18px;font-weight:600;margin-top:18px;background:#007aff;color:#fff}
+button:disabled{opacity:.45}.row{display:flex;gap:10px}.row button{flex:1}.secondary{background:#e9e9ed;color:#111}
+#preview{max-width:100%;max-height:360px;display:block;margin:15px auto;border-radius:10px}
+#status{text-align:center;color:#555;min-height:24px;margin-top:12px}.small{text-align:center;color:#777;font-size:14px;margin-top:12px}
+</style>
+</head>
+<body>
+<main>
+<h1>Photo Crop & Resize</h1>
+<p class="sub">Automatically crop and resize to exact pixels.</p>
+<div class="card">
+<label for="photo">Choose Photo</label>
+<input id="photo" type="file" accept="image/jpeg,image/png,image/heic,image/heif,image/*">
+<label for="w">Desired Width (pixels)</label>
+<input id="w" type="number" min="1" step="1" value="400">
+<label for="h">Desired Height (pixels)</label>
+<input id="h" type="number" min="1" step="1" value="514">
+<button id="go" type="button">Crop & Resize</button>
+</div>
+<div class="card" id="resultCard" hidden>
+<img id="preview" alt="Resized result">
+<div id="dimensions" class="small"></div>
+<div class="row"><button id="save" type="button">Save / Download</button><button id="share" class="secondary" type="button">Share</button></div>
+</div>
+<div id="status"></div>
+</main>
+<script>
+let sourceFile=null, outputBlob=null;
+const photo=document.getElementById('photo'), go=document.getElementById('go');
+const resultCard=document.getElementById('resultCard'), preview=document.getElementById('preview');
+const dimensions=document.getElementById('dimensions'), status=document.getElementById('status');
+
+photo.addEventListener('change',function(){
+  sourceFile=this.files && this.files.length ? this.files[0] : null;
+  resultCard.hidden=true; outputBlob=null;
+  status.textContent=sourceFile ? 'Photo selected. Tap Crop & Resize.' : '';
+});
+
+function loadImage(file){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file);
+    const img=new Image();
+    img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Image could not be read'));};
+    img.src=url;
+  });
+}
+
+go.addEventListener('click', async function(){
+  if(!sourceFile){status.textContent='Please choose a photo first.';return;}
+  const tw=Number(document.getElementById('w').value), th=Number(document.getElementById('h').value);
+  if(!Number.isInteger(tw)||!Number.isInteger(th)||tw<1||th<1){status.textContent='Please enter valid whole-number dimensions.';return;}
+  status.textContent='Processing…';
+  try{
+    const img=await loadImage(sourceFile);
+    const iw=img.naturalWidth, ih=img.naturalHeight, target=tw/th, original=iw/ih;
+    let sw=iw, sh=ih, sx=0, sy=0;
+    if(original>target){sw=ih*target;sx=(iw-sw)/2;}
+    else if(original<target){sh=iw/target;sy=(ih-sh)/2;}
+    const canvas=document.createElement('canvas');canvas.width=tw;canvas.height=th;
+    const ctx=canvas.getContext('2d');
+    ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+    ctx.drawImage(img,sx,sy,sw,sh,0,0,tw,th);
+    outputBlob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Could not create image')),'image/jpeg',0.95));
+    preview.src=URL.createObjectURL(outputBlob);
+    dimensions.textContent='Result: '+tw+' × '+th+' pixels';
+    resultCard.hidden=false;status.textContent='Done.';
+  }catch(e){console.error(e);status.textContent='The photo could not be processed. Please try another photo.';}
+});
+
+document.getElementById('save').addEventListener('click',function(){
+  if(!outputBlob)return;
+  const a=document.createElement('a');a.href=URL.createObjectURL(outputBlob);
+  a.download='photo_'+document.getElementById('w').value+'x'+document.getElementById('h').value+'.jpg';
+  document.body.appendChild(a);a.click();a.remove();
+});
+document.getElementById('share').addEventListener('click',async function(){
+  if(!outputBlob)return;
+  const file=new File([outputBlob],'resized_photo.jpg',{type:'image/jpeg'});
+  if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})) await navigator.share({files:[file],title:'Resized Photo'});
+  else status.textContent='Sharing is not supported here. Use Save / Download.';
+});
+</script>
+</body></html>
