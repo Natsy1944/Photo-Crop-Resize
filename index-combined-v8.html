@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Crop & Print Size</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+    font-family: Arial, sans-serif;
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 20px;
+}
+h1 { text-align: center; }
+.row { margin: 20px 0; }
+label {
+    display: inline-block;
+    width: 150px;
+    font-size: 16px;
+    vertical-align: middle;
+}
+input[type="number"] {
+    width: 90px;
+    padding: 8px;
+    font-size: 16px;
+}
+input[type="file"] { font-size: 15px; max-width: 100%; }
+select {
+    padding: 8px;
+    font-size: 16px;
+    width: 180px;
+}
+#fileName {
+    display: block;
+    margin-top: 10px;
+    margin-left: 150px;
+}
+button {
+    margin-top: 15px;
+    padding: 12px 25px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.mode { margin: 20px 0; }
+.mode label { width: auto; margin-right: 18px; }
+.mode input { margin-right: 6px; }
+.note { margin-left: 150px; font-size: 13px; color: #555; }
+#message { margin-top: 20px; font-weight: bold; }
+
+@media (max-width: 600px) {
+    body {
+        margin: 10px auto;
+        padding: 16px;
+    }
+    h1 { font-size: 24px; }
+    .row label {
+        width: 100%;
+        margin-bottom: 7px;
+    }
+    #fileName, .note {
+        margin-left: 0;
+    }
+    input[type="file"] {
+        max-width: 100%;
+    }
+    input[type="number"], select {
+        width: auto;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    button {
+        width: 100%;
+        min-height: 48px;
+        -webkit-appearance: none;
+        appearance: none;
+        touch-action: manipulation;
+    }
+    .mode label {
+        width: auto;
+        margin-right: 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+<h1>Photo Crop & Print</h1>
+
+<div class="row">
+    <label>Select Photo:</label>
+    <input type="file" id="photoInput" accept="image/*">
+    <span id="fileName"></span>
+</div>
+
+<div class="mode">
+    <label><input type="radio" name="mode" value="pixel" checked> Pixel Size</label>
+    <label><input type="radio" name="mode" value="print"> Print Size</label>
+</div>
+
+<div id="pixelMode">
+    <div class="row">
+        <label>Width:</label>
+        <input type="number" id="pixelWidth" value="400" min="1">
+        <span>pixels</span>
+    </div>
+    <div class="row">
+        <label>Height:</label>
+        <input type="number" id="pixelHeight" value="514" min="1">
+        <span>pixels</span>
+    </div>
+    <button id="pixelButton">Crop & Resize</button>
+</div>
+
+<div id="printMode" style="display:none;">
+    <div class="row">
+        <label>Print Width:</label>
+        <input type="number" id="printWidth" value="4" min="0.1" step="0.1">
+        <select id="widthUnit">
+            <option value="cm">cm</option>
+            <option value="in">inches</option>
+        </select>
+    </div>
+
+    <div class="row">
+        <label>Print Height:</label>
+        <input type="number" id="printHeight" value="5" min="0.1" step="0.1">
+        <select id="heightUnit">
+            <option value="cm">cm</option>
+            <option value="in">inches</option>
+        </select>
+    </div>
+
+    <div class="row">
+        <label>PPI:</label>
+        <input type="number" id="ppi" value="300" min="1" step="1">
+        <span>pixels/inch</span>
+    </div>
+
+    <div class="row">
+        <label>Photos per A4 page:</label>
+        <select id="a4Layout">
+            <option value="1">1 × 1 (1 photo)</option>
+            <option value="2">2 × 2 (4 photos)</option>
+            <option value="3">3 × 3 (9 photos)</option>
+        </select>
+    </div>
+
+    <button id="printButton">Create PDF</button>
+</div>
+
+<div id="message"></div>
+
+<script>
+const photoInput = document.getElementById("photoInput");
+const fileName = document.getElementById("fileName");
+const pixelButton = document.getElementById("pixelButton");
+const printButton = document.getElementById("printButton");
+const message = document.getElementById("message");
+const pixelMode = document.getElementById("pixelMode");
+const printMode = document.getElementById("printMode");
+
+photoInput.addEventListener("change", function () {
+    if (this.files.length > 0) {
+        fileName.textContent = "File Selected: " + this.files[0].name;
+        message.textContent = "";
+    } else {
+        fileName.textContent = "";
+    }
+});
+
+document.querySelectorAll('input[name="mode"]').forEach(radio => {
+    radio.addEventListener("change", function () {
+        const print = this.value === "print";
+        pixelMode.style.display = print ? "none" : "block";
+        printMode.style.display = print ? "block" : "none";
+        message.textContent = "";
+    });
+});
+
+/* Keep the two print-size units synchronized. */
+document.getElementById("widthUnit").addEventListener("change", function () {
+    document.getElementById("heightUnit").value = this.value;
+});
+
+document.getElementById("heightUnit").addEventListener("change", function () {
+    document.getElementById("widthUnit").value = this.value;
+});
+
+function loadImage(file) {
+    return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            resolve(img);
+        };
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error("The selected photo could not be loaded."));
+        };
+        img.src = url;
+    });
+}
+
+/* Same automatic crop-then-resize principle used by the existing app. */
+function cropAndResizeImage(img, targetWidth, targetHeight) {
+    const targetRatio = targetWidth / targetHeight;
+    const sourceRatio = img.width / img.height;
+
+    let sx = 0, sy = 0, sw = img.width, sh = img.height;
+
+    if (sourceRatio > targetRatio) {
+        sw = img.height * targetRatio;
+        sx = (img.width - sw) / 2;
+    } else if (sourceRatio < targetRatio) {
+        sh = img.width / targetRatio;
+        sy = (img.height - sh) / 2;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(targetWidth);
+    canvas.height = Math.round(targetHeight);
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+
+    return canvas;
+}
+
+function canvasToBlob(canvas) {
+    return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+            if (blob) resolve(blob);
+            else reject(new Error("Could not create the output image."));
+        }, "image/jpeg", 0.92);
+    });
+}
+
+async function saveJPEG(blob, filename) {
+    const file = new File([blob], filename, {type:"image/jpeg"});
+
+    /* On iPhone/iPad, use the Share sheet so the user can choose Save to Files. */
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent) &&
+        navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
+        await navigator.share({files:[file], title:filename});
+        return;
+    }
+
+    /* Normal browser download for Windows/macOS/Android and local HTML testing. */
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+pixelButton.addEventListener("click", async function () {
+    try {
+        const file = photoInput.files[0];
+        const width = parseInt(document.getElementById("pixelWidth").value, 10);
+        const height = parseInt(document.getElementById("pixelHeight").value, 10);
+
+        if (!file) {
+            message.textContent = "Please select a photo.";
+            return;
+        }
+        if (!width || !height || width <= 0 || height <= 0) {
+            message.textContent = "Please enter valid pixel dimensions.";
+            return;
+        }
+
+        message.textContent = "Processing photo...";
+        const img = await loadImage(file);
+        const canvas = cropAndResizeImage(img, width, height);
+        const blob = await canvasToBlob(canvas);
+
+        await saveJPEG(blob, `photo-${width}x${height}.jpg`);
+        message.textContent = "Photo Saved Successfully.";
+    } catch (err) {
+        if (err.name === "AbortError") {
+            message.textContent = "Save cancelled.";
+        } else {
+            message.textContent = "Could not process the photo: " + err.message;
+        }
+    }
+});
+
+printButton.addEventListener("click", async function () {
+    try {
+        const file = photoInput.files[0];
+        let width = parseFloat(document.getElementById("printWidth").value);
+        let height = parseFloat(document.getElementById("printHeight").value);
+        const ppi = parseFloat(document.getElementById("ppi").value);
+        const unit = document.getElementById("widthUnit").value;
+        const n = parseInt(document.getElementById("a4Layout").value, 10);
+
+        if (!file) {
+            message.textContent = "Please select a photo.";
+            return;
+        }
+        if (!width || !height || width <= 0 || height <= 0 || !ppi || ppi <= 0) {
+            message.textContent = "Please enter valid print dimensions and PPI.";
+            return;
+        }
+        if (!window.jspdf) {
+            message.textContent = "PDF library could not be loaded. Please check your internet connection.";
+            return;
+        }
+
+        /* Convert requested physical size to cm and then to pixels. */
+        const widthCm = unit === "in" ? width * 2.54 : width;
+        const heightCm = unit === "in" ? height * 2.54 : height;
+        const widthIn = widthCm / 2.54;
+        const heightIn = heightCm / 2.54;
+        const pixelWidth = Math.round(widthIn * ppi);
+        const pixelHeight = Math.round(heightIn * ppi);
+
+        message.textContent = "Creating PDF...";
+
+        const img = await loadImage(file);
+        const canvas = cropAndResizeImage(img, pixelWidth, pixelHeight);
+
+        const {jsPDF} = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        const pageW = 210;
+        const pageH = 297;
+        const photoW = widthCm * 10;
+        const photoH = heightCm * 10;
+
+        const gapX = (pageW - n * photoW) / (n + 1);
+        const gapY = (pageH - n * photoH) / (n + 1);
+
+        if (gapX < 0 || gapY < 0) {
+            message.textContent = `The selected photo size is too large for ${n} × ${n} photos on A4.`;
+            return;
+        }
+
+        const imageData = canvas.toDataURL("image/jpeg", 0.92);
+
+        for (let row = 0; row < n; row++) {
+            for (let col = 0; col < n; col++) {
+                const x = gapX + col * (photoW + gapX);
+                const y = gapY + row * (photoH + gapY);
+                pdf.addImage(imageData, "JPEG", x, y, photoW, photoH);
+            }
+        }
+
+        const sizeLabel = unit === "in"
+            ? `${width}x${height}-in`
+            : `${width}x${height}-cm`;
+
+        const pdfBlob = pdf.output("blob");
+        const pdfFilename = `A4-${n}x${n}-${sizeLabel}-${ppi}ppi.pdf`;
+
+        /* On iPhone/iPad, use the Share sheet so the user can choose
+           Save to Files, just as in Pixel Size mode. */
+        const pdfFile = new File([pdfBlob], pdfFilename, {
+            type: "application/pdf"
+        });
+
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent) &&
+            navigator.share && navigator.canShare &&
+            navigator.canShare({files:[pdfFile]})) {
+
+            await navigator.share({
+                files: [pdfFile],
+                title: pdfFilename
+            });
+
+        } else {
+            /* Normal browser download for Windows/macOS/Android. */
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            const a = document.createElement("a");
+            a.href = pdfUrl;
+            a.download = pdfFilename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
+        }
+
+        message.textContent =
+            `PDF created: ${width} ${unit === "in" ? "inches" : "cm"} × ` +
+            `${height} ${unit === "in" ? "inches" : "cm"} at ${ppi} PPI ` +
+            `(${pixelWidth} × ${pixelHeight} pixels)`;
+    } catch (err) {
+        message.textContent = "Could not create the PDF: " + err.message;
+    }
+});
+</script>
+</body>
+</html>
