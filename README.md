@@ -3,16 +3,16 @@
 **Photo Crop Resize & Print** is a simple browser-based tool for preparing photographs for digital use and printing.
 
 It allows you to either:
-
 * **Crop and resize a photo to exact pixel dimensions**, or
-* **Prepare a photo for printing at an exact physical size**, specified in centimetres or inches and at a selected PPI.
-
-The application can also create an **A4 PDF containing 1, 4, or 9 copies** of the photograph.
+* **Prepare a photo for printing at an exact physical size** (specified in centimetres or inches and at a selected PPI)
+  and create an **A4 PDF containing 1, 4, or 9 copies** of the photograph.
 
 ## Features
+To run the application, click on the following link on your device's browser:
+[Open the application](https://natsy1944.github.io/Photo-Crop-Resize/)
 
+A web page with the following User Interface will open with a user interface (UI). Now Select Photo by tapping the Choose File button and one of the two options: Pixel Size and Print Size as shown on the following screenshots of the two options:
 <img width="1279" height="1085" alt="WhatsApp Image 2026-09-27 at 3 53 17 PM" src="https://github.com/user-attachments/assets/88538092-357f-4d4e-a5c0-fc282f2f4195" />
-
 ### 1. Pixel Size
 
 Select a photograph and enter the required:
