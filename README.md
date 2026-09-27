@@ -24,10 +24,11 @@ and click on the Crop & Resize button. The app automatically crops the photograp
 This is useful for applications such as passport, visa and other online photo requirements where an exact pixel size is specified. The resulting photograph is saved as a JPEG file.
 
 ### Option 2. Print Size
-On selecting this option, a Create PDF button will appear. now, instead of specifying pixels, specify the physical size at which you want the photograph prepared for printing. You can enter:
+On selecting this option, a Create PDF button will appear. Now, specify the physical size at which you want the photograph prepared for printing. You can enter:
 * Width in **cm or inches**
 * Height in **cm or inches**
 * **PPI (pixels per inch)**
+
 and click on the Create PDF button. The application will calculate the required pixel dimensions from the physical size and PPI, then automatically crop and resize the photograph accordingly. For example:
 **4 × 5 cm at 300 PPI** produces an image of approximately: **472 × 591 pixels**
 
