@@ -13,7 +13,7 @@ To run the application, click on the following link on your device's browser:
 
 A web page with the following User Interface (UI) will open. Now Select Photo by tapping the Choose File button and selecting one of the two options - Pixel Size and Print Size - as shown on the following screenshots of the two options:
 <img width="1279" height="1085" alt="WhatsApp Image 2026-09-27 at 3 53 17 PM" src="https://github.com/user-attachments/assets/88538092-357f-4d4e-a5c0-fc282f2f4195" />
-### 1. Pixel Size
+### Option 1. Pixel Size
 
 On selecting this option, the Crop & Size button will appear. Now click on Choose File button to select the photograph and enter the required:
 * Width in pixels
@@ -23,7 +23,7 @@ and click on the Crop & Resize button. The app automatically crops the photograp
 **400 × 514 pixels**
 This is useful for applications such as passport, visa and other online photo requirements where an exact pixel size is specified. The resulting photograph is saved as a JPEG file.
 
-### 2. Print Size
+### Option 2. Print Size
 On selecting this option, a Create PDF button will appear. now, instead of specifying pixels, specify the physical size at which you want the photograph prepared for printing. You can enter:
 * Width in **cm or inches**
 * Height in **cm or inches**
