@@ -15,29 +15,27 @@ A web page with the following User Interface (UI) will open. Now Select Photo by
 <img width="1279" height="1085" alt="WhatsApp Image 2026-09-27 at 3 53 17 PM" src="https://github.com/user-attachments/assets/88538092-357f-4d4e-a5c0-fc282f2f4195" />
 ### 1. Pixel Size
 
-Select a photograph and enter the required:
+On selecting this option, the Crop & Size button will appear. Now click on Choose File button to select the photograph and enter the required:
 * Width in pixels
 * Height in pixels
-The app automatically crops the photograph to the required aspect ratio and then resizes it to the exact pixel dimensions. For example:
+and click on the Crop & Resize button. The app automatically crops the photograph to the required aspect ratio and then resizes it to the exact pixel dimensions. For example:
 
 **400 × 514 pixels**
 This is useful for applications such as passport, visa and other online photo requirements where an exact pixel size is specified. The resulting photograph is saved as a JPEG file.
 
 ### 2. Print Size
-Instead of specifying pixels, you can specify the physical size at which you want the photograph prepared for printing. You can enter:
+On selecting this option, a Create PDF button will appear. now, instead of specifying pixels, specify the physical size at which you want the photograph prepared for printing. You can enter:
 * Width in **cm or inches**
 * Height in **cm or inches**
 * **PPI (pixels per inch)**
-
-The application calculates the required pixel dimensions from the physical size and PPI, then automatically crops and resizes the photograph accordingly. For example:
+and click on the Create PDF button. The application will calculate the required pixel dimensions from the physical size and PPI, then automatically crop and resize the photograph accordingly. For example:
 **4 × 5 cm at 300 PPI** produces an image of approximately: **472 × 591 pixels**
 
-### 3. A4 PDF
-The Print Size option can create an A4 PDF containing multiple copies of the photograph. Available layouts are:
+## A4 PDF
+The Print Size option creates an A4 PDF containing multiple copies of the photograph. Available layouts are:
 * **1 × 1** — 1 photograph
 * **2 × 2** — 4 photographs
 * **3 × 3** — 9 photographs
-
 The photographs are placed on an A4 page with equal spacing while maintaining the exact physical dimensions specified. This can be useful when several copies of the same photograph are required for printing.
 
 ## Automatic Cropping
@@ -54,13 +52,11 @@ The photograph is processed **in the browser on your own device**.
 The application does not require the photograph to be uploaded to a server for processing.
 
 ## Where It Works
-
 The application is designed to work in modern web browsers on:
 * iPhone and iPad
 * Android devices
 * Windows computers
 * Mac computers
-
 The application is hosted using GitHub Pages and can be accessed directly through the web.
 
 ## Example
@@ -72,11 +68,9 @@ Suppose you have a photograph from a mobile phone and need a **4 × 5 cm photogr
 5. Enter **300 PPI**.
 6. Select the required number of photographs per A4 page.
 7. Select **Create PDF**.
-
 The application automatically performs the required cropping and resizing and creates an A4 PDF ready for printing.
 
 ## Why This Tool Was Created
-
 Many photo requirements specify either an exact **pixel size** or an exact **physical print size**. Converting between pixels, physical dimensions and PPI can otherwise require separate software or manual calculations. This tool brings these operations together in one simple interface.
 
 ## Technology
