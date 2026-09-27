@@ -11,6 +11,9 @@ The application can also create an **A4 PDF containing 1, 4, or 9 copies** of th
 
 ## Features
 
+<img width="1280" height="1024" alt="WhatsApp Image 2026-09-27 at 12 29 40 PM" src="https://github.com/user-attachments/assets/1b0b9652-b511-4fbb-92f7-8087d307d90f" />
+
+
 ### 1. Pixel Size
 
 Select a photograph and enter the required:
