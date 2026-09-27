@@ -37,6 +37,7 @@ The Print Size option creates an A4 PDF containing multiple copies of the photog
 * **1 × 1** — 1 photograph
 * **2 × 2** — 4 photographs
 * **3 × 3** — 9 photographs
+  
 The photographs are placed on an A4 page with equal spacing while maintaining the exact physical dimensions specified. This can be useful when several copies of the same photograph are required for printing.
 
 ## Automatic Cropping
