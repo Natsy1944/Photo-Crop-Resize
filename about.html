@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Crop Resize & Print — About</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;line-height:1.6;max-width:850px;margin:0 auto;padding:24px;color:#222}
+h1{line-height:1.2;margin-bottom:8px}
+h2{margin-top:32px;padding-bottom:4px;border-bottom:1px solid #ddd}
+h3{margin-top:24px}
+.subtitle{font-size:1.1em;color:#555;margin-bottom:24px}
+.app-button{display:inline-block;padding:12px 20px;margin:8px 0 24px;background:#222;color:white;text-decoration:none;border-radius:6px;font-weight:bold}
+.app-button:hover{opacity:.85}
+ul,ol{padding-left:28px}
+.privacy{background:#f5f5f5;padding:16px 18px;border-radius:6px}
+.app-preview{margin:28px 0 32px;text-align:center}
+.app-preview img{display:block;width:100%;height:auto;border:1px solid #ddd;border-radius:6px}
+
+footer{margin-top:40px;padding-top:16px;border-top:1px solid #ddd;color:#666;font-size:.9em}
+@media(max-width:600px){body{padding:18px}h1{font-size:28px}}
+</style>
+</head>
+<body>
+
+<h1>Photo Crop Resize &amp; Print</h1>
+<p class="subtitle">A simple browser-based tool for preparing photographs for digital use and printing.</p>
+
+<a class="app-button" href="https://natsy1944.github.io/Photo-Crop-Resize/">Open Photo Crop Resize &amp; Print</a>
+<p>When you tap on the above button, a web page with the following user interface will open with two radio buttons as options. Selecting either of the rwo options will change the UI as shown below for the two cases.</p>
+<div class="app-preview">
+<img src="app-preview.jpg" alt="Photo Crop Resize & Print application">
+</div>
+<p><strong>Photo Crop Resize &amp; Print</strong> allows you to either:</p>
+<ul>
+<li><strong>Crop and resize a photo to exact pixel dimensions</strong>, or</li>
+<li><strong>Prepare a photo for printing at an exact physical size</strong>, specified in centimetres or inches and at a selected PPI.</li>
+</ul>
+<p>The application can also create an <strong>A4 PDF containing 1, 4, or 9 copies</strong> of the photograph.</p>
+
+<h2>Features</h2>
+
+<h3>Option 1. Pixel Size</h3>
+<p>Select a photograph and enter the required:</p>
+<ul><li>Width in pixels</li><li>Height in pixels</li></ul>
+<p>The app automatically crops the photograph to the required aspect ratio and then resizes it to the exact pixel dimensions.</p>
+<p><strong>Example: 400 × 514 pixels</strong></p>
+<p>This is useful for applications such as passport, visa and other online photo requirements where an exact pixel size is specified.</p>
+<p>The resulting photograph is saved as a JPEG file.</p>
+
+<h3>Option 2. Print Size</h3>
+<p>Instead of specifying pixels, you can specify the physical size at which you want the photograph prepared for printing.</p>
+<p>You can enter:</p>
+<ul><li>Width in <strong>cm or inches</strong></li><li>Height in <strong>cm or inches</strong><li><strong>PPI (pixels per inch)</strong></li></ul>
+<p>The application calculates the required pixel dimensions from the physical size and PPI, then automatically crops and resizes the photograph accordingly.</p>
+<p><strong>Example: 4 × 5 cm at 300 PPI</strong></p>
+<p>This produces an image of approximately <strong>472 × 591 pixels</strong>.</p>
+
+<h3>A4 PDF</h3>
+<p>The Print Size option can create an A4 PDF containing multiple copies of the photograph.</p>
+<ul><li><strong>1 × 1</strong> — 1 photograph</li><li><strong>2 × 2</strong> — 4 photographs</li><li><strong>3 × 3</strong> — 9 photographs</li></ul>
+<p>The photographs are placed on an A4 page with equal spacing while maintaining the exact physical dimensions specified.</p>
+<p>This can be useful when several copies of the same photograph are required for printing.</p>
+
+<h2>Automatic Cropping</h2>
+<p>The application does not simply stretch a photograph to fit the requested dimensions. Instead, it:</p>
+<ol><li>Determines the aspect ratio of the original photograph.</li><li>Determines the aspect ratio required by the user.</li><li>Crops the excess portion from the photograph.</li><li>Resizes the cropped image to the required pixel dimensions.</li></ol>
+<p>This helps preserve the proportions of the subject in the photograph.</p>
+
+<h2>Privacy</h2>
+<div class="privacy">
+<p>The photograph is processed <strong>in the browser on your own device</strong>.</p>
+<p>The application does not require the photograph to be uploaded to a server for processing.</p>
+</div>
+
+<h2>Where It Works</h2>
+<p>The application is designed to work in modern web browsers on:</p>
+<ul><li>iPhone and iPad</li><li>Android devices</li><li>Windows computers</li><li>Mac computers</li></ul>
+<p>The application is hosted using GitHub Pages and can be accessed directly through the web.</p>
+
+<h2>Example</h2>
+<p>Suppose you have a photograph from a mobile phone and need a <strong>4 × 5 cm photograph at 300 PPI</strong>.</p>
+<ol><li>Select the photograph.</li><li>Choose <strong>Print Size</strong>.</li><li>Enter <strong>4 cm</strong> for width.</li><li>Enter <strong>5 cm</strong> for height.</li><li>Enter <strong>300 PPI</strong>.</li><li>Select the required number of photographs per A4 page.</li><li>Select <strong>Create PDF</strong>.</li></ol>
+<p>The application automatically performs the required cropping and resizing and creates an A4 PDF ready for printing.</p>
+
+<h2>Why This Tool Was Created</h2>
+<p>Many photo requirements specify either an exact <strong>pixel size</strong> or an exact <strong>physical print size</strong>. Converting between pixels, physical dimensions and PPI can otherwise require separate software or manual calculations.</p>
+<p>This tool brings these operations together in one simple interface.</p>
+
+<h2>Technology</h2>
+<p>The application is built using standard web technologies:</p>
+<ul><li>HTML</li><li>CSS</li><li>JavaScript</li><li>HTML Canvas for image processing</li><li>jsPDF for creating PDF files</li></ul>
+<p>No installation is required. Simply open the web application in a browser and select a photograph.</p>
+
+<footer>Photo Crop Resize &amp; Print</footer>
+</body>
+</html>
